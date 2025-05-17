@@ -1,5 +1,7 @@
 % Semestral work for class BI-TEX - template for exams
 
+\parindent=24pt
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inputs begin
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,10 +18,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \newcount\questionCnt\questionCnt=1  % Question numbers start at 1
+\newcount\subquestionCnt\subquestionCnt=`a  % Subquestions start at a
 
 \def\questionSingle{single}
 \def\questionMultiple{multi}
 \def\questionTF{tf}
+\def\questionSub{sub}
 \def\questionType{none}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -61,10 +65,12 @@
 }
 
 \def\question#1#2{%
-    \noindent
-    {\bf
-        Q\the\questionCnt:
-    }%
+    \ifx\questionType\questionSub
+        \char\subquestionCnt)
+    \else
+        \noindent
+        {\bf Q\the\questionCnt: }%
+    \fi
     #1%
     \ifx#2\empty\else~(#2{\it p})\fi
     \par\smallskip
@@ -134,19 +140,26 @@
     \def\questionType{none}%
 }
 
-\def\shortanswerquestion#1#2{%
-    \answerQuestion{#1}{#2}{1.2cm}%
+\def\answerquestion#1#2#3{%
+    \answerQuestion{#1}{#2}{#3}%
+    \ifx\questionType\questionSub
+        \advance\subquestionCnt by 1
+    \else
+        \advance\questionCnt by 1
+    \fi
+    \par\smallskip
+}
+
+\def\subquestions#1#2{%
+    \question{#1}{#2}%
+    \def\questionType{sub}%
     \advance\questionCnt by 1
 }
 
-\def\mediumanswerquestion#1#2{%
-    \answerQuestion{#1}{#2}{4cm}%
-    \advance\questionCnt by 1
-}
-
-\def\longanswerquestion#1#2{%
-    \answerQuestion{#1}{#2}{8cm}%
-    \advance\questionCnt by 1
+\def\endsubquestions{%
+    \bigskip
+    \def\questionType{none}%
+    \subquestionCnt=`a
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -176,10 +189,13 @@
 \choice{4}
 \endchoicequestion
 
-\shortanswerquestion{How many prime numbers are there?}{2}
+\answerquestion{How many prime numbers are there?}{2}{3cm}
 
-\mediumanswerquestion{How many prime numbers are there? Add some insight.}{3}
+\answerquestion{How many prime numbers are there? Prove it.}{4}{4cm}
 
-\longanswerquestion{How many prime numbers are there? Prove it.}{4}
+\subquestions{Question with multiple subquestions.}{5}
+\answerquestion{Solve for $3x + 9 = 12x - 18$}{2}{3cm}
+\answerquestion{Solve for $2x^2 + 6 = 4x + 6$}{2}{4cm}
+\endsubquestions
 
 \bye
