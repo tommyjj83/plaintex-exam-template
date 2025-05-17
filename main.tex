@@ -1,0 +1,150 @@
+% Semestral work for class BI-TEX - template for exams
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inputs begin
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input tikz
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inputs end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Variables begin
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\newcount\questionCnt\questionCnt=1  % Question numbers start at 1
+
+\def\questionSingle{single}
+\def\questionMultiple{multi}
+\def\questionTF{tf}
+\def\questionType{none}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Variables end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definition of internal commands begin
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\centerOptionMark#1{\hbox to 40pt{\hss#1\hss}}
+
+\def\singleChoiceBox{%
+    \hbox{%
+        \tikz \draw (0,0) circle (3pt);%
+    }%
+}
+
+\def\multiChoiceBox{%
+    \lower 1.7pt
+    \hbox{%
+        \vrule width 0.4pt height 10pt
+        \vbox{%
+            \hrule width 9.2pt height 0.4pt
+            \vskip 9.2pt
+            \hrule width 9.2pt height 0.4pt
+        }%               
+        \vrule width 0.4pt height 10pt
+    }%
+}
+
+\def\TFBox{%
+    \hbox{%
+        \multiChoiceBox
+        \kern 3pt
+        \multiChoiceBox
+    }%
+}
+
+\def\question#1#2{%
+    \noindent
+    {\bf
+        Q\the\questionCnt:
+    }%
+    #1%
+    \ifx#2\empty\else~(#2{\it p})\fi
+    \advance\questionCnt by 1
+    \par\smallskip
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definition of internal commands begin
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definition of external commands begin
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\singlechoicequestion#1#2{%
+    \def\questionType{single}%
+    \question{#1}{#2}%
+}
+
+\def\multichoicequestion#1#2{%
+    \def\questionType{multi}%
+    \question{#1}{#2}%
+}
+
+\def\truefalsequestion#1#2{%
+    \def\questionType{tf}%
+    \question{#1}{#2}%
+    {\bf\noindent\hskip 18pt T\kern 5pt F}%
+    \par\smallskip
+}
+
+\def\choice#1{%
+    \noindent\hskip 8pt
+    \ifx\questionType\questionSingle
+        \centerOptionMark{\singleChoiceBox}%
+    \fi
+    \ifx\questionType\questionMultiple
+        \centerOptionMark{\multiChoiceBox}%
+    \fi
+    \ifx\questionType\questionTF
+        \centerOptionMark{\TFBox}%
+    \fi
+    \vtop{%
+        \noindent\hsize=\dimexpr\hsize-15pt-40pt
+        #1
+    }%
+    \par\smallskip
+}
+
+\def\endquestion{
+    \bigskip
+    \def\questionType{none}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Definition of external commands end
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Example usage
+\singlechoicequestion{What is $2 + 2$?}{}
+\choice{Hello how are you. I wanted to text you about this wonderful class Im taking right now, it is called BI-TEX.}
+\choice{3}
+\choice{4}
+\choice{5}
+\endquestion
+
+\multichoicequestion{Which is a prime number?}{2}
+\choice{2}
+\choice{4}
+\choice{6}
+\choice{7}
+\endquestion
+
+\truefalsequestion{Mark even numbers.}{}
+\choice{1}
+\choice{2}
+\choice{3}
+\choice{4}
+\endquestion
+
+\bye

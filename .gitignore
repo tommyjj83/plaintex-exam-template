@@ -1,0 +1,14 @@
+-- TeX --
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.dvi
+*.fdb_latexmk
+*.fls
+*.lof
+*.log
+*.lol
+*.lot
+main.pdf
+*.pgf
