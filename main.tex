@@ -1,6 +1,7 @@
 % Semestral work for class BI-TEX - template for exams
 
-\parindent=24pt
+\setbox0=\hbox{\bf Q1: }
+\parindent=\wd0 % So that when "Qn: " is written, it would start nicely below
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inputs begin
@@ -73,7 +74,7 @@
     \fi
     #1%
     \ifx#2\empty\else~(#2{\it p})\fi
-    \par\smallskip
+    \par\vskip 5pt
 }
 
 \def\answerQuestion#1#2#3{%
@@ -85,7 +86,7 @@
         \break
     \fi
     \box0
-    \par\smallskip
+    \par
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -113,30 +114,33 @@
     \def\questionType{tf}%
     \question{#1}{#2}%
     \advance\questionCnt by 1
-    {\bf\noindent\hskip 18pt T\kern 5pt F}%
-    \par\smallskip
+    {\bf\hskip 1pt T\kern 6pt F}%
+    \par\vskip 3pt
 }
 
 \def\choice#1{%
-    \noindent\hskip 8pt
+    \noindent\hskip\parindent
     \ifx\questionType\questionSingle
-        \centerOptionMark{\singleChoiceBox}%
+        \hbox to 10pt{\hss\singleChoiceBox\hss}%
+        \kern 4pt
     \fi
     \ifx\questionType\questionMultiple
-        \centerOptionMark{\multiChoiceBox}%
+        \hbox to 10pt{\hss\multiChoiceBox\hss}%
+        \kern 6pt
     \fi
     \ifx\questionType\questionTF
-        \centerOptionMark{\TFBox}%
+        \TFBox
+        \kern 6pt
     \fi
     \vtop{%
         \noindent\hsize=\dimexpr\hsize-15pt-40pt
         #1
     }%
-    \par\smallskip
+    \par\vskip 3pt
 }
 
 \def\endchoicequestion{%
-    \bigskip
+    \vskip 12pt
     \def\questionType{none}%
 }
 
@@ -147,7 +151,7 @@
     \else
         \advance\questionCnt by 1
     \fi
-    \par\smallskip
+    \par\vskip 3pt
 }
 
 \def\subquestions#1#2{%
@@ -157,7 +161,7 @@
 }
 
 \def\endsubquestions{%
-    \bigskip
+    \vskip 12pt
     \def\questionType{none}%
     \subquestionCnt=`a
 }
@@ -194,8 +198,8 @@
 \answerquestion{How many prime numbers are there? Prove it.}{4}{4cm}
 
 \subquestions{Question with multiple subquestions.}{5}
-\answerquestion{Solve for $3x + 9 = 12x - 18$}{2}{3cm}
-\answerquestion{Solve for $2x^2 + 6 = 4x + 6$}{2}{4cm}
+\answerquestion{Solve for $3x + 9 = 12x - 18$}{2}{2cm}
+\answerquestion{Solve for $2x^2 + 6 = 4x + 6$}{3}{4cm}
 \endsubquestions
 
 \bye
