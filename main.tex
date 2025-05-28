@@ -3,6 +3,9 @@
 \setbox0=\hbox{\bf Q1: }
 \parindent=\wd0 % So that when "Qn: " is written, it would start nicely below
 
+\font\courseTitle=cmb10 at 17pt
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inputs begin
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -33,7 +36,7 @@
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Definition of internal commands begin
+% Definition of internal macros begin
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \def\centerOptionMark#1{\hbox to 40pt{\hss#1\hss}}
@@ -74,6 +77,7 @@
     \fi
     #1%
     \ifx#2\empty\else~(#2{\it p})\fi
+    \vfil
     \par\vskip 5pt
 }
 
@@ -90,13 +94,55 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Definition of internal commands begin
+% Definition of internal macros end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Definition of external commands begin
+% Definition of external macros begin
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\def\setcourse#1{%
+    \def\course{#1}%
+    \def\headerPresent{}%
+}
+
+\def\setvariant#1{%
+    \def\variant{#1}%
+    \def\headerPresent{}%
+}
+
+\def\includenameinheader{%
+    \def\printName{}%
+    \def\headerPresent{}%
+}
+
+\def\printheader{%
+    \hbox to \hsize{%
+        \ifx\variant\undefined\else
+            \rlap{Variant: {\bf\variant}}%
+        \fi
+        \ifx\course\undefined\else
+            \hbox to \hsize{%
+                \courseTitle
+                \hss\course\hss
+            }%
+        \fi
+        \ifx\printName\undefined\else
+            \llap{%
+                \hbox to 5cm{%
+                    Name: \leaders\hbox{.}\hfil
+                }%
+            }%
+        \fi
+    }%
+
+    \ifx\headerPresent\undefined\else
+        \vskip 0.7cm
+        \hrule
+        \vskip 1cm
+    \fi
+}
 
 \def\singlechoicequestion#1#2{%
     \def\questionType{single}%
@@ -167,9 +213,14 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Definition of external commands end
+% Definition of external macros end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\setcourse{BI-TEX}
+\setvariant{A}
+\includenameinheader
+
+\printheader
 
 % Example usage
 \singlechoicequestion{What is $2 + 2$?}{}
@@ -195,7 +246,7 @@
 
 \answerquestion{How many prime numbers are there?}{2}{3cm}
 
-\answerquestion{How many prime numbers are there? Prove it.}{4}{4cm}
+\answerquestion{How many prime numbers are there? Prove it.}{4}{6cm}
 
 \subquestions{Question with multiple subquestions.}{5}
 \answerquestion{Solve for $3x + 9 = 12x - 18$}{2}{2cm}
