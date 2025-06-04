@@ -73,34 +73,35 @@
 \def\TFBox{%
     \hbox{%
         \multiChoiceBox
-        \kern 3pt
+        \hskip 3pt
         \multiChoiceBox
     }%
 }
 
 \def\question#1#2{%
-    \ifx\questionType\questionSub
-        \char\subquestionCnt)
-    \else
-        \noindent
-        {\bf Q\the\questionCnt: }%
-    \fi
-    #1%
-    \ifx#2\empty\else~(#2{\it p})\fi
-    \vfil
-    \par\vskip 5pt
+    \setbox0=\hbox{
+        \ifx\questionType\questionSub
+            \hskip\parindent\char\subquestionCnt)
+        \else
+            \noindent
+            {\bf Q\the\questionCnt: }%
+        \fi
+    }%
+    \hbox{%
+        \copy0
+        \vtop{%
+            \noindent\hsize=\dimexpr\hsize-\wd0
+            #1\ifx#2\empty\else~(#2{\it p})\fi
+        }%
+    }%
+    \vskip 5pt
 }
 
 \def\answerQuestion#1#2#3{%
-    \setbox0=\vbox{%
+    \vbox{%
         \question{#1}{#2}%
-        \vskip #3
+        \vskip #3 plus 1fil
     }%
-    \ifnum\ht0 > \dimexpr\pagegoal-\pagetotal
-        \break
-    \fi
-    \box0
-    \par
 }
 
 \def\saveQuestionCnt{%
@@ -118,13 +119,12 @@
         \closein\countFileIn
         \questionCnt=\x
     \fi
-
     \hbox to \hsize{
         \hss
         \vbox to 3em{%
             \vss
             \hbox{Question\hfil}%
-            \vskip 10.5pt
+            \vskip 10pt
             \hbox{Points\hfil}%
             \vss
         }%
@@ -145,7 +145,6 @@
                 \repeat
         \hss
     }
-
     \questionCnt=1  % Set back to 1
 }
 
@@ -179,7 +178,7 @@
 }
 
 \def\printheader{%
-    \setbox1=\hbox to \hsize{%
+    \setbox0=\hbox to \hsize{%
         \ifx\variant\undefined\else
             \rlap{Variant: {\bf\variant}}%
         \fi
@@ -197,20 +196,16 @@
             }%
         \fi
     }%
-
     % If scoring and there is no box above, don't vskip
-    \ifdim\ht1=0pt\else
-        \box1
+    \ifdim\ht0=0pt\else
+        \box0
         \ifx\includeScoring\undefined\else
             \vskip 1cm
         \fi
     \fi
-
     \ifx\includeScoring\undefined\else
-
         \printScoring
     \fi    
-
     \ifx\headerPresent\undefined\else
         \vskip 0.7cm
         \hrule
@@ -237,33 +232,38 @@
     \question{#1}{#2}%
     \saveQuestionCnt
     \advance\questionCnt by 1
-    {\bf\hskip 1pt T\kern 6pt F}%
-    \par\vskip 3pt
+    \vbox{\bf\hskip 4pt T\hskip 6pt F}%
+    \vskip 3pt
 }
 
 \def\choice#1{%
-    \noindent\hskip\parindent
-    \ifx\questionType\questionSingle
-        \hbox to 10pt{\hss\singleChoiceBox\hss}%
-        \kern 4pt
-    \fi
-    \ifx\questionType\questionMultiple
-        \hbox to 10pt{\hss\multiChoiceBox\hss}%
-        \kern 6pt
-    \fi
-    \ifx\questionType\questionTF
-        \TFBox
-        \kern 6pt
-    \fi
-    \vtop{%
-        \noindent\hsize=\dimexpr\hsize-15pt-40pt
-        #1
+    \setbox0=\hbox{%
+        \noindent\hskip\dimexpr\parindent+3pt
+        \ifx\questionType\questionSingle
+            \hbox to 10pt{\hss\singleChoiceBox\hss}%
+            \hskip 4pt
+        \fi
+        \ifx\questionType\questionMultiple
+            \hbox to 10pt{\hss\multiChoiceBox\hss}%
+            \hskip 6pt
+        \fi
+        \ifx\questionType\questionTF
+            \TFBox
+            \hskip 6pt
+        \fi
+    }
+    \hbox{%
+        \copy0
+        \vtop{%
+            \noindent\hsize=\dimexpr\hsize-\wd0
+            #1%
+        }%
     }%
-    \par\vskip 3pt
+    \vskip 3pt
 }
 
 \def\endchoicequestion{%
-    \vskip 12pt
+    \vskip 12pt plus 1fil
     \def\questionType{none}%
 }
 
@@ -275,7 +275,7 @@
         \saveQuestionCnt
         \advance\questionCnt by 1
     \fi
-    \par\vskip 3pt
+    \vskip 3pt
 }
 
 \def\subquestions#1#2{%
@@ -286,7 +286,7 @@
 }
 
 \def\endsubquestions{%
-    \vskip 12pt
+    \vskip 12pt plus 1fil
     \def\questionType{none}%
     \subquestionCnt=`a
 }
@@ -304,32 +304,30 @@
 
 \printheader
 
-\singlechoicequestion{What is $2 + 2$?}{}
-\choice{Hello how are you. I wanted to text you about this wonderful class Im taking right now, it is called BI-TEX.}
-\choice{3}
-\choice{4}
-\choice{5}
+\singlechoicequestion{Which of the folowing statements is correct? Only one answer is to be marked as this is a single choice question.}{}
+\choice{User has full control over which element in the header will be present.}
+\choice{The header may contain either all of the elements or none of them.}
+\choice{The header may not be modified.}
 \endchoicequestion
 
-\multichoicequestion{Which is a prime number?}{2}
-\choice{2}
-\choice{4}
-\choice{6}
-\choice{7}
+\multichoicequestion{Which of the folowing statements is correct? Please select all possibilities (anything between 0--4) as this is a multichoice question.}{2}
+\choice{All the option boxes are nicely aligned, so they would not distract students from thinking.}
+\choice{If the number of questions changes, the scoring table will automagically adapt to it.}
+\choice{The positioning of the option boxes was not handled.}
 \endchoicequestion
 
-\truefalsequestion{Mark even numbers.}{}
-\choice{1}
-\choice{2}
-\choice{3}
-\choice{4}
+\truefalsequestion{Please mark which of the following statements are true and which are false.}{}
+\choice{If an aswer to a question is too long to fit on a page, it will not break and \TeX{} will print an error message on the screen.}
+\choice{Line breaking is handled correctly and the answers will break with no problem. Also the checkboxes stay fixed to the first line of an answer.}
+\choice{If a question itself is too long to fit on a single line, it will break correctly.}
+\choice{If a question with free space under it is too big to fit on a page, it is handled correctly, so the question is placed on the next page.}
 \endchoicequestion
 
-\answerquestion{How many prime numbers are there?}{2}{4cm}
+\answerquestion{How many prime numbers are there?}{2}{1cm}
 
-\answerquestion{How many prime numbers are there? Prove it.}{4}{6cm}
+\answerquestion{How many prime numbers are there? Prove it. More space is left for that purpose.}{4}{5cm}
 
-\subquestions{Question with multiple subquestions.}{5}
+\subquestions{Here are two equations to be solved. They are shown as two subquestion to this question.}{5}
 \answerquestion{Solve for $3x + 9 = 12x - 18$}{2}{2cm}
 \answerquestion{Solve for $2x^2 + 6 = 4x + 6$}{3}{4cm}
 \endsubquestions
