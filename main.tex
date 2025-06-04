@@ -10,6 +10,8 @@
 \hsize=\dimexpr597pt-54pt-54pt
 \vsize=\dimexpr845pt-54pt-54pt
 
+\footline{}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Inputs begin
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -27,6 +29,10 @@
 
 \newcount\questionCnt\questionCnt=1  % Question numbers start at 1
 \newcount\subquestionCnt\subquestionCnt=`a  % Subquestions start at a
+\newcount\i % Help in loops
+
+\newwrite\countFileOut
+\newread\countFileIn
 
 \def\questionSingle{single}
 \def\questionMultiple{multi}
@@ -97,6 +103,52 @@
     \par
 }
 
+\def\saveQuestionCnt{%
+    \immediate\openout\countFileOut=questioncnt.dat
+    \immediate\write\countFileOut{\the\questionCnt}%
+    \immediate\closeout\countFileOut
+}
+
+\def\printScoring{%
+    \openin\countFileIn=questioncnt.dat
+    \ifeof\countFileIn
+        \questionCnt=0
+    \else
+        \read\countFileIn to \x
+        \closein\countFileIn
+        \questionCnt=\x
+    \fi
+
+    \hbox to \hsize{
+        \hss
+        \vbox to 3em{%
+            \vss
+            \hbox{Question\hfil}%
+            \vskip 10.5pt
+            \hbox{Points\hfil}%
+            \vss
+        }%
+        \hskip 5pt
+        \vrule\hskip 1pt\vrule
+        \hskip 5pt
+        \i=0
+        \loop
+            \advance\i by 1
+            \vbox to 3em{%
+                \vss
+                \hbox to 1cm{\hfil\the\i\hfil}%
+                \vskip 10pt
+                \hbox to 1cm{\hfil\phantom{P}}%
+                \vss
+            }%
+            \ifnum\i<\questionCnt
+                \repeat
+        \hss
+    }
+
+    \questionCnt=1  % Set back to 1
+}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Definition of internal macros end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -121,8 +173,13 @@
     \def\headerPresent{}%
 }
 
+\def\includescoring{%
+    \def\includeScoring{}%
+    \def\headerPresent{}%
+}
+
 \def\printheader{%
-    \hbox to \hsize{%
+    \setbox1=\hbox to \hsize{%
         \ifx\variant\undefined\else
             \rlap{Variant: {\bf\variant}}%
         \fi
@@ -141,6 +198,19 @@
         \fi
     }%
 
+    % If scoring and there is no box above, don't vskip
+    \ifdim\ht1=0pt\else
+        \box1
+        \ifx\includeScoring\undefined\else
+            \vskip 1cm
+        \fi
+    \fi
+
+    \ifx\includeScoring\undefined\else
+
+        \printScoring
+    \fi    
+
     \ifx\headerPresent\undefined\else
         \vskip 0.7cm
         \hrule
@@ -151,18 +221,21 @@
 \def\singlechoicequestion#1#2{%
     \def\questionType{single}%
     \question{#1}{#2}%
+    \saveQuestionCnt
     \advance\questionCnt by 1
 }
 
 \def\multichoicequestion#1#2{%
     \def\questionType{multi}%
     \question{#1}{#2}%
+    \saveQuestionCnt
     \advance\questionCnt by 1
 }
 
 \def\truefalsequestion#1#2{%
     \def\questionType{tf}%
     \question{#1}{#2}%
+    \saveQuestionCnt
     \advance\questionCnt by 1
     {\bf\hskip 1pt T\kern 6pt F}%
     \par\vskip 3pt
@@ -199,6 +272,7 @@
     \ifx\questionType\questionSub
         \advance\subquestionCnt by 1
     \else
+        \saveQuestionCnt
         \advance\questionCnt by 1
     \fi
     \par\vskip 3pt
@@ -207,6 +281,7 @@
 \def\subquestions#1#2{%
     \question{#1}{#2}%
     \def\questionType{sub}%
+    \saveQuestionCnt
     \advance\questionCnt by 1
 }
 
@@ -220,13 +295,15 @@
 % Definition of external macros end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Example usage
+
 \setcourse{BI-TEX}
 \setvariant{A}
 \includenameinheader
+\includescoring
 
 \printheader
 
-% Example usage
 \singlechoicequestion{What is $2 + 2$?}{}
 \choice{Hello how are you. I wanted to text you about this wonderful class Im taking right now, it is called BI-TEX.}
 \choice{3}
@@ -248,7 +325,7 @@
 \choice{4}
 \endchoicequestion
 
-\answerquestion{How many prime numbers are there?}{2}{3cm}
+\answerquestion{How many prime numbers are there?}{2}{4cm}
 
 \answerquestion{How many prime numbers are there? Prove it.}{4}{6cm}
 
