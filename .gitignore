@@ -13,3 +13,5 @@
 main.pdf
 *.pgf
 *.dat
+*.synctex.gz
+*.toc
