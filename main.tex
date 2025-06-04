@@ -91,7 +91,7 @@
         \copy0
         \vtop{%
             \noindent\hsize=\dimexpr\hsize-\wd0
-            #1\ifx#2\empty\else~(#2{\it p})\fi
+            #1\ifx#2\empty\else~(#2\thinspace pt)\fi
         }%
     }%
     \vskip 5pt
@@ -314,6 +314,7 @@
 \choice{All the option boxes are nicely aligned, so they would not distract students from thinking.}
 \choice{If the number of questions changes, the scoring table will automagically adapt to it.}
 \choice{The positioning of the option boxes was not handled.}
+\choice{User has a choice to show or not to show the number of points for a question. Both cases are handled.}
 \endchoicequestion
 
 \truefalsequestion{Please mark which of the following statements are true and which are false.}{}
@@ -325,7 +326,7 @@
 
 \answerquestion{How many prime numbers are there?}{2}{1cm}
 
-\answerquestion{How many prime numbers are there? Prove it. More space is left for that purpose.}{4}{5cm}
+\answerquestion{How many prime numbers are there? Prove it. More space is left for that purpose.}{4}{4cm}
 
 \subquestions{Here are two equations to be solved. They are shown as two subquestion to this question.}{5}
 \answerquestion{Solve for $3x + 9 = 12x - 18$}{2}{2cm}
