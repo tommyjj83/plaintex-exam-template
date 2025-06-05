@@ -12,16 +12,6 @@
 
 \footline{}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Inputs begin
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\input tikz
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Inputs end
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Variables begin
@@ -52,8 +42,8 @@
 \def\centerOptionMark#1{\hbox to 40pt{\hss#1\hss}}
 
 \def\singleChoiceBox{%
-    \hbox{%
-        \tikz \draw (0,0) circle (3pt);%
+    \raise 1pt\hbox{%
+        $\bigcirc$
     }%
 }
 
@@ -240,8 +230,8 @@
     \setbox0=\hbox{%
         \noindent\hskip\dimexpr\parindent+3pt
         \ifx\questionType\questionSingle
-            \hbox to 10pt{\hss\singleChoiceBox\hss}%
-            \hskip 4pt
+            \hbox to 12pt{\hss\singleChoiceBox\hss}%
+            \hskip 3pt
         \fi
         \ifx\questionType\questionMultiple
             \hbox to 10pt{\hss\multiChoiceBox\hss}%
