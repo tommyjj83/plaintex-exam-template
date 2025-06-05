@@ -1,0 +1,97 @@
+\documentclass{article}
+
+\usepackage[left=1in,right=1in,bottom=1in, top=1in]{geometry}
+\usepackage{fontspec}
+\usepackage{polyglossia}
+\setmainlanguage{czech}
+
+\title{Šablona pro zadání testů v Plain\TeX{}u}
+\author{Tomáš Jaroš}
+\date{\today}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Zadání}
+    Tato práce má za cíl vytvořit jednoduchou šablonu pro zadávání testů v Plain\TeX{}u. Pokryje základní typy otázek, které se mohou v testech
+    vyskytnout, a poskytne uživateli základní nástroje pro tvorbu zadání. Návrh je realizován pomocí maker a uživateli je poskytnuta
+    sada maker pro sázení zadání.
+
+\section{Poskytnutá makra}
+\subsection{Hlavička}
+    Uživatel si může zvolit libovolný počet a kombinaci ze čtyř maker, které slouží pro sázení hlavičky zadání.
+
+    První nabízené makro je \texttt{\textbackslash setcourse\{\}}, které bere jako svůj parametr
+    název kurzu. Ten je zobrazen velkým tučným písmem a je vyrovnán na střed.
+
+    Další poskytnuté makro je \texttt{\textbackslash setvariant\{\}}. Jediným parametrem
+    je varianta testu, např. A či 1. Varianta je zobrazena v levém hodním rohu na úrovni kurzu.
+
+    Třetí nabízené makro je \texttt{\textbackslash includenameinheader}. Toto makro způsobí,
+    že se v záhlaví objeví volná kolonka pro jméno zkoušeného. To je téměř nedílnou součástí
+    každého zadání.
+
+    Poslední z těchto maker je \texttt{\textbackslash includescoring}. Toto makro vytvoří tabulku,
+    do které je možné zapsat získané body z jednotlivých otázek. To pomůže zkoušejícímu zpřehlednit
+    hodnocení a vyvarovat se chybám. Toto makro se adaptuje na počet zadaných otázek, z toho důvodu
+    funguje až při druhém průchodu. Tabulka je vytvořena dle typografických pravidel, tedy
+    nechána téměř volná, bez mříží.
+
+    Hlavička se vypíše až po použití makra \texttt{\textbackslash printheader}. Jak bylo zmíněno, uživatel
+    si může zvolit libovolnou kombinaci ze zmíněných čtyř maker. Implementace se postará,
+    aby byly vloženy vhodné mezery, či nebyla vložena žádná, pokud to aktuální výběr nevyžaduje.
+    Vždy je tak udržena přehlednost a zároveň nerušivost těchto prvků.
+    Po hlavičce následuje hlavní část, je zde proto vložena typografická linka pro odělení těchto
+    částí testového papíru.
+
+\subsection{Otázky}
+    Návrh podporuje několik typů otázek, které pokrývají všechny potřebné scénáře použití. Důraz byl kladen
+    na jejich úplnost, jednoduchost použití a typografickou korektnost.
+
+\subsubsection*{Otázky s možnostmi}
+    Prvním skupinou otázek jsou otázky s možnostmi. Jako první je otázka s jedinou správnou odpovědí,
+    tedy tzv. single-choice. Uživatel započne tento typ otázky makrem \texttt{\textbackslash singlechoicequestion\{\}\{\}}.
+    Jako první se předává samotná otázka, druhým parametrem je pak počet bodů za tuto otázku.
+    Jednotlivé možnosti se specifikují makrem \texttt{\textbackslash choice\{\}}, jehož jediným
+    parametrem je právě text možnosti.
+    Obdobně fungují i otázky s více možnými odpověďmi, tzv. multi-choice, které započnou makrem \texttt{\textbackslash multichoicequestion\{\}\{\}},
+    a otázky typu pravda/nepravta, tzv. true-false, které započnou makrem \texttt{\textbackslash truefalsequestion\{\}\{\}}.
+    Nakonec pro ukončení uživatel zadá \texttt{\textbackslash endchoicequestion}, které mimojiné vizuálně oddělí tuto
+    otázku od následující. Poslední zmíněné makro je společné pro všechny otázky s možnostmi.
+
+    U tohoto typu otázek byl kladen důraz na tvar a velikost boxů pro zaškrtávání. Tvar odlišuje, o který typ
+    otázky se jedná, nedojde tak ke zmatení a typ otázky nemusí být explicitně zmíněn. Velikost je uspůsobená
+    pro přehledné označení. Pozice boxů je navíc volena tak, aby zkoušeného nerozptylovala. Je zarovnána pod zadání, nikterak nevyčnívá
+    a při pohledu na celý list jednotlivé boxy vypají jako součást textu.
+
+    \subsubsection*{Otázky s volnými odpověďmi}
+    Druhým typem nabízených otázek jsou otázky s volnými odpověďmi. Jednoduchá otázka tohoto typu je
+    \texttt{\textbackslash answerquestion\{\}\{\}\{\}}. Toto makro požaduje tři parametry: samotnou otázku,
+    počet bodů za otázku a požadovaný prostor pro odpověď. Otázka a prostor pod ní je brána jako jeden celek,
+    proto pokud by se společně nevešli na stránku, jsou přesunuty na následnující. Návrh s tím počítá a
+    v takovém případě jsou automaticky nataženy mezery mezi jednotlivými otázkami. Nedochází tak k underfull chybě.
+
+    Makro zmíněné v předchozím odstavci lze použít i pro otázku s podotázkami. Stačí před seznam takovýchto podotázek
+    vložit makro \texttt{\textbackslash subquestions\{\}\{\}}, očekávající zadání a počet bodů, a tento
+    seznam ukončit makrem \texttt{\textbackslash endsubquestions}. Jednotlivé otázky pak nejsou značeny čísly, ale písmeny, a
+    jsou zobrazeny jako podotázky.
+
+    Délka zadání otázek i možností není limitována na délku řádky. Návrh dokáže delší text zalomit podle
+    aktuálního prostoru (který se pro každý typ otázky liší, viz velikost boxů true-false otázek a single-choice otázek). 
+
+\section{Závěr}
+    V této práci jsem vytvořil plně použitelnou šablonu pro vytváření testových zadání. Návrh šablony podporuje
+    různé typy otázek, které pokrývají potřeby zkoušejícího. Zadání otázek jsou konfigurovatelná a poradí si s textem libovolné
+    délky. Dostupná jsou také makra pro vytvoření hlavičky, která je často nedílnou součástí testů. Ta se umí automaticky
+    přizpůsobit počtu otázek či zvoleným možnostem a upravit tak svůj vzhled. Návrh respektuje typografická pravidla
+    a neruší zkoušeného od přemýšlení.
+
+    Při implementaci byla vynaložena snaha pro jednoduchost použití. Z toho důvodu se mohou některá makra použít stejným způsobem
+    v různém kontextu a docílit tak jiných výsledků. Použítí je však stále intuitivní.
+
+    Makra jsou využitelná pro Plain\TeX{} a mohou být zpracována libovolným moderním enginem, nevyužívají
+    totiž žádných speciálních konstrukcí (např. \textbackslash directlua). Samotná ukázka je zpracována v Lua\TeX{}u.  
+
+\end{document}
